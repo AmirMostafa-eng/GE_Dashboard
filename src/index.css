@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+a,
+button,
+input,
+textarea {
+  outline: none;
+}
+/* Define your German Education theme colors */
+@theme {
+  --color-background: #f5fff1;
+  --color-foreground: #2e5d36;
+  --color-primary: #77af63;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #b7db9c;
+  --color-secondary-foreground: #2e5d36;
+  --color-muted: #ddebcf;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #ddebcf;
+  --color-accent-foreground: #2e5d36;
+  --color-destructive: #e33e3e;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #ddebcf;
+  --color-input: #ddebcf;
+  --color-ring: #77af63;
+  --color-success: #68b15d;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f8d84b;
+  --color-warning-foreground: #2e5d36;
+  --color-sidebar: #2e5d36;
+  --color-sidebar-foreground: #97c294;
+
+  --radius: 0.5rem;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+.poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.poppins-black {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.poppins-thin-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.poppins-extralight-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.poppins-light-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.poppins-regular-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.poppins-medium-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.poppins-semibold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.poppins-bold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.poppins-extrabold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.poppins-black-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Apply base styles */
+/* body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+} */
