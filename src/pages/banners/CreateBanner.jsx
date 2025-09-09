@@ -26,7 +26,7 @@ export default function CreateBanner({ isOpen, onClose, onSuccess }) {
         url: formData.url,
       };
 
-      console.log(formDataToSend);
+      // console.log(formDataToSend);
 
       await axios.post("/api/banner/create", formDataToSend);
 

@@ -63,7 +63,7 @@ export default function BannersPage() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`/api/banner/${selectedBanner.id}`);
+      await axios.delete(`/api/banner/delete/${selectedBanner.id}`);
       await fetchingBanners(); // Refresh the list
       setIsDeleteOpen(false);
       setSelectedBanner(null);

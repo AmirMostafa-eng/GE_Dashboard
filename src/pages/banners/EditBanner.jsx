@@ -12,7 +12,7 @@ import axios from "axios";
 export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
   const [formData, setFormData] = useState({
     redirectUrl: banner?.redirectUrl || "",
-    image: null,
+    url: banner?.url || "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,17 +21,12 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
     setIsLoading(true);
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("redirectUrl", formData.redirectUrl);
-      if (formData.image) {
-        formDataToSend.append("image", formData.image);
-      }
+      const formDataToSend = {
+        redirectUrl: formData.redirectUrl,
+        url: formData.url,
+      };
 
-      await axios.put(`/api/banner/${banner.id}`, formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.put(`/api/banner/update/${banner.id}`, formDataToSend);
 
       onSuccess();
       onClose();
@@ -42,11 +37,6 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, image: file }));
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -55,15 +45,21 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="image">Banner Image</Label>
+            <Label htmlFor="url">Banner url</Label>
             <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
+              id="url"
+              value={formData.url}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  url: e.target.value,
+                }))
+              }
               className="cursor-pointer"
+              placeholder="Enter banner URL"
+              required
             />
-            {banner?.url && !formData.image && (
+            {banner?.url && !formData.url && (
               <div className="mt-2">
                 <img
                   src={banner.url}
