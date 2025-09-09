@@ -5,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Lock, User, Clock, Check } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -23,14 +24,23 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Login attempt:", formData);
-    if (stayLoggedIn) {
-      localStorage.setItem("user", JSON.stringify(formData));
-    } else {
-      sessionStorage.setItem("user", JSON.stringify(formData));
+  const handleSubmit = async () => {
+    try {
+      console.log("Login attempt:", formData);
+
+      const returnedTokens = await axios.post("/api/Auth/login", formData);
+
+      if (stayLoggedIn) {
+        localStorage.setItem("user", JSON.stringify(formData));
+        localStorage.setItem("tokens", JSON.stringify(returnedTokens.data));
+      } else {
+        sessionStorage.setItem("user", JSON.stringify(formData));
+        sessionStorage.setItem("tokens", JSON.stringify(returnedTokens.data));
+      }
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
     }
-    navigate("/");
   };
 
   return (
@@ -71,19 +81,19 @@ export default function Login() {
                 {/* Username Input */}
                 <div>
                   <Label
-                    htmlFor="username"
+                    htmlFor="email"
                     className="text-muted-foreground ml-1 "
                   >
-                    Enter Your Username or Email
+                    Enter Your Email
                   </Label>
                   <div className="relative mt-2">
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
                     <Input
-                      name="username"
-                      id="username"
+                      name="email"
+                      id="email"
                       type="text"
-                      placeholder="username or email"
-                      value={formData.username}
+                      placeholder="Enter your email"
+                      value={formData.email}
                       onChange={handleInputChange}
                       className="pl-12 pr-12 h-14 bg-muted/50 border-0 rounded-xl text-sm sm:text-md md:text-lg"
                     />

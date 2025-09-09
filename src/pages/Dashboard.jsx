@@ -28,7 +28,7 @@ export default function Dashboard() {
       {checkingUser() ? (
         <div className="flex min-h-screen">
           <Sidebar activeSection={page} onSectionChange={setPage} />
-          <main className="flex-1 bg-gray-50 max-w-[calc(100%-80px)] lg:max-w-full ">
+          <main className="flex-1 bg-gray-50 max-w-[calc(100%-80px)] xl:max-w-full min-h-screen pb-6">
             {page === "users" && <UsersPage />}
             {page === "banners" && <BannersPage />}
             {page === "exams" && <ExamsPage />}

@@ -22,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-vite.config.*.js
+vite.config.js
 .env
 .env.*.local
 *.env.local

@@ -9,7 +9,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      if (window.innerWidth < 1024) {
+      if (window.innerWidth < 1280) {
         setIsExpanded(false);
       } else {
         setIsExpanded(true);
@@ -54,7 +54,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
   return (
     <div
       className={`
-      relative left-0 top-0 h-[100vh] bg-sidebar text-sidebar-foreground
+      relative left-0 top-0 min-h-[100vh] bg-sidebar text-sidebar-foreground
       transition-all duration-300 ease-in-out z-50
       ${isExpanded ? "w-64" : "w-20"}
       shadow-xl border-r border-sidebar-foreground/10
@@ -72,7 +72,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
                 </span>
               </div>
               <div>
-                <h1 className="text-white font-semibold text-lg">Dashboard</h1>
+                <h1 className="text-white font-semibold text-lg">PrufCoach</h1>
               </div>
             </div>
           )}
@@ -80,7 +80,7 @@ export default function Sidebar({ activeSection, onSectionChange }) {
           {/* Hamburger Menu Button */}
           <button
             onClick={toggleSidebar}
-            disabled={windowWidth <= 1024}
+            disabled={windowWidth <= 1280}
             className={`
               p-2 rounded-lg hover:bg-sidebar-foreground/10 
               text-sidebar-foreground hover:text-white
