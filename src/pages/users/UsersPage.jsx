@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,18 +15,35 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import mockUsers from "./UsersData";
+// import mockUsers from "./UsersData";
 import UserTable from "./UsersTable";
+import axios from "axios";
 
 export default function ManageUsers() {
+  const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
+  const getUsers = async () => {
+    const tokenData = JSON.parse(localStorage.getItem("tokens"));
+    const fetchedUsers = await axios.get("/api/user/get-users", {
+      headers: {
+        Authorization: `Bearer ${tokenData.accessToken}`,
+      },
+    });
+    setUsers(fetchedUsers.data);
+    console.log(fetchedUsers.data);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   // Filter and search logic
   const filteredUsers = useMemo(() => {
-    return mockUsers.filter((user) => {
+    return users.filter((user) => {
       const matchesSearch =
         user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -38,7 +55,7 @@ export default function ManageUsers() {
 
       return matchesSearch && matchesRole;
     });
-  }, [searchTerm, roleFilter]);
+  }, [searchTerm, roleFilter, users]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
@@ -125,7 +142,7 @@ export default function ManageUsers() {
       </div>
 
       {/* Users Table */}
-      <div className="mx-4 lg:mx-10">
+      <div className="mx-4 lg:mx-10 rounded-xl overflow-hidden">
         <div className="shadow-sm rounded-lg border border-border bg-white">
           <div className="overflow-x-auto">
             <table className="w-full">

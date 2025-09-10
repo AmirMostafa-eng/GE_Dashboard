@@ -84,7 +84,7 @@ export default function UserTable({ users, onView, onDelete }) {
           {/* Payments Count */}
           <td className="px-4 lg:px-6 py-4">
             <span className="font-medium text-foreground">
-              {user.payments.length}
+              {user.payments ? user.payments.length : 0}
             </span>
           </td>
 
