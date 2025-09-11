@@ -155,7 +155,8 @@ export default function ManageUsers() {
           {/* <Users size={32} /> */}
           <lord-icon
             src="https://cdn.lordicon.com/hhljfoaj.json"
-            trigger="hover"
+            trigger="loop"
+            delay="500"
             colors="primary:#000000,secondary:#2e5d36,tertiary:#ffc738"
             style={{ width: "35px", height: "35px" }}
           ></lord-icon>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FiLogIn } from "react-icons/fi";
 import Sidebar from "@/components/layout/Sidebar";
@@ -10,6 +10,8 @@ import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
   const [page, setPage] = useState("banners");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const navigate = useNavigate();
   const checkingUser = () => {
@@ -23,13 +25,62 @@ export default function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      if (width < 1280) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    // Run once on mount
+    handleResize();
+
+    // Attach resize listener
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Add overlay for mobile when sidebar is open
+  // const handleOverlayClick = () => {
+  //   if (windowWidth < 1280) {
+  //     setIsSidebarOpen(false);
+  //   }
+  // };
+
   return (
     <div>
       {/* Authenticated view with sidebar and main content */}
       {checkingUser() ? (
-        <div className="flex min-h-screen">
-          <Sidebar activeSection={page} onSectionChange={setPage} />
-          <main className="flex-1 bg-gray-50 max-w-[calc(100%-80px)] xl:max-w-full min-h-screen pb-6">
+        <div className="relative min-h-screen">
+          {/* Overlay for mobile */}
+          {/* {windowWidth < 1280 && isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+              onClick={handleOverlayClick}
+            />
+          )} */}
+
+          <Sidebar
+            activeSection={page}
+            onSectionChange={setPage}
+            onToggleSidebar={setIsSidebarOpen}
+            isOpen={isSidebarOpen}
+            windowWidth={windowWidth}
+          />
+          <main
+            className={`min-h-screen bg-gray-50 transition-all duration-300 pb-6
+            ${
+              windowWidth >= 1280
+                ? isSidebarOpen
+                  ? "ml-60"
+                  : "ml-20"
+                : "ml-20"
+            }`}
+          >
             {page === "users" && <UsersPage />}
             {page === "banners" && <BannersPage />}
             {page === "exams" && <ExamsPage />}

@@ -83,7 +83,8 @@ export default function BannersPage() {
           {/* <BiImage />  */}
           <lord-icon
             src="https://cdn.lordicon.com/wahyhize.json"
-            trigger="hover"
+            trigger="loop"
+            delay="500"
             colors="primary:#000000,secondary:#2e5d36,tertiary:#c71f16,quaternary:#2e5d36,quinary:#ebe6ef,senary:#ffc738,septenary:#f9c9c0"
             style={{ width: "35px", height: "35px" }}
           ></lord-icon>
