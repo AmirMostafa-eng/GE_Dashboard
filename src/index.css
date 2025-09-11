@@ -15,7 +15,7 @@ textarea {
   --color-secondary: #b7db9c;
   --color-secondary-foreground: #2e5d36;
   --color-muted: #ddebcf;
-  --color-muted-foreground: #6b7280;
+  --color-muted-foreground: #4a4a4a;
   --color-accent: #ddebcf;
   --color-accent-foreground: #2e5d36;
   --color-destructive: #e33e3e;
@@ -29,7 +29,7 @@ textarea {
   --color-warning-foreground: #2e5d36;
   --color-sidebar: #2e5d36;
   --color-sidebar-foreground: #97c294;
-
+  --color-dark-green: #4e6d50;
   --radius: 0.5rem;
 }
 

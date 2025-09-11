@@ -2,8 +2,11 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Trash2 } from "lucide-react";
+import lottie from "lottie-web";
+import { defineElement } from "@lordicon/element";
 
 export default function UserTable({ users, onView, onDelete }) {
+  defineElement(lottie.loadAnimation);
   // Get last payment status
   function getLastPaymentStatus(payments) {
     if (!payments || payments.length === 0) return null;
@@ -46,7 +49,7 @@ export default function UserTable({ users, onView, onDelete }) {
     return role === "Admin" ? (
       <Badge className="bg-primary text-primary-foreground">Admin</Badge>
     ) : (
-      <Badge variant="secondary">Student</Badge>
+      <Badge variant="secondary">User</Badge>
     );
   }
 

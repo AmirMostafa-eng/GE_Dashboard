@@ -6,6 +6,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import UsersPage from "./users/UsersPage";
 import BannersPage from "./banners/BannersPage";
 import ExamsPage from "./exams/ExamsPage";
+import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
   const [page, setPage] = useState("banners");
@@ -32,6 +33,28 @@ export default function Dashboard() {
             {page === "users" && <UsersPage />}
             {page === "banners" && <BannersPage />}
             {page === "exams" && <ExamsPage />}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: "#fff",
+                  color: "#333",
+                },
+                success: {
+                  style: {
+                    background: "#4CAF50",
+                    color: "white",
+                  },
+                },
+                error: {
+                  style: {
+                    background: "#F44336",
+                    color: "white",
+                  },
+                },
+              }}
+            />
           </main>
         </div>
       ) : (

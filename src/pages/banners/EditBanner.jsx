@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -27,11 +28,12 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
       };
 
       await axios.put(`/api/banner/update/${banner.id}`, formDataToSend);
-
+      toast.success("Banner updated successfully");
       onSuccess();
       onClose();
     } catch (error) {
       console.error("Error updating banner:", error);
+      toast.error("Error updating banner");
     } finally {
       setIsLoading(false);
     }

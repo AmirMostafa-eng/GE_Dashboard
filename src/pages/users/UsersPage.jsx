@@ -18,9 +18,21 @@ import {
 // import mockUsers from "./UsersData";
 import UserTable from "./UsersTable";
 import axios from "axios";
+import UserDetails from "./UserDetails"; // Add this import
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import toast from "react-hot-toast";
 
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,7 +62,8 @@ export default function ManageUsers() {
 
       const matchesRole =
         roleFilter === "All Roles" ||
-        (roleFilter === "Student" && user.role === "User") ||
+        (roleFilter === "User" && user.role === "User") ||
+        (roleFilter !== "Admin" && user.role !== "Admin") ||
         (roleFilter === "Admin" && user.role === "Admin");
 
       return matchesSearch && matchesRole;
@@ -75,33 +88,87 @@ export default function ManageUsers() {
   };
 
   const handleView = (user) => {
-    console.log("View user:", user);
-    // Implement view user modal
+    setSelectedUser(user);
+    setIsUserDetailsOpen(true);
   };
 
   const handleDelete = (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      console.log("Delete user:", userId);
-      // Implement delete user logic
+    console.log("Deleting user with ID:", userId);
+    setSelectedUser(users.find((user) => user.id === userId));
+    setIsDeleteOpen(true);
+  };
+
+  const confirmDelete = async (userId) => {
+    console.log("Deleting user with ID:", userId);
+    try {
+      const tokenData = JSON.parse(localStorage.getItem("tokens"));
+
+      await axios.delete(`/api/user/delete-user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+      await getUsers(); // Refresh the list
+      setIsDeleteOpen(false);
+      toast.success("User deleted successfully");
+      setIsUserDetailsOpen(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Error deleting user");
     }
   };
+
+  // const handleSaveUser = (updatedUser) => {
+  //   setUsers((prev) =>
+  //     prev.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+  //   );
+  //   setSelectedUser(updatedUser); // Update selected user too
+  // };
+
+  const handleCloseDialog = () => {
+    setIsUserDetailsOpen(false);
+    setSelectedUser(null);
+  };
+
+  // const handleDeleteFromDialog = async (userId) => {
+  //   try {
+  //     const tokenData = JSON.parse(localStorage.getItem("tokens"));
+  //     await axios.delete(`/api/user/delete-user/${userId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${tokenData.accessToken}`,
+  //       },
+  //     });
+  //     setUsers((prev) => prev.filter((user) => user.id !== userId));
+  //     setIsUserDetailsOpen(false);
+  //     setSelectedUser(null);
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //   }
+  // };
 
   return (
     <div className="bg-background min-h-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 bg-white shadow p-6 border border-border">
         <div className="flex items-center gap-2">
-          <Users size={32} />
+          {/* <Users size={32} /> */}
+          <lord-icon
+            src="https://cdn.lordicon.com/hhljfoaj.json"
+            trigger="hover"
+            colors="primary:#000000,secondary:#2e5d36,tertiary:#ffc738"
+            style={{ width: "35px", height: "35px" }}
+          ></lord-icon>
           <h1 className="text-3xl font-bold ">Manage Users</h1>
         </div>
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <div className="w-3 h-3 rounded-full bg-destructive"></div>
           <div className="w-3 h-3 rounded-full bg-warning"></div>
           <div className="w-3 h-3 rounded-full bg-success"></div>
           <span className="ml-2 text-sm font-medium bg-white text-foreground px-2 py-1 rounded border">
             DE
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* Search and Filters */}
@@ -131,7 +198,7 @@ export default function ManageUsers() {
               </SelectTrigger>
               <SelectContent className="bg-white">
                 <SelectItem value="All Roles">All Roles</SelectItem>
-                <SelectItem value="Student">Student</SelectItem>
+                <SelectItem value="User">User</SelectItem>
                 <SelectItem value="Admin">Admin</SelectItem>
               </SelectContent>
             </Select>
@@ -163,10 +230,10 @@ export default function ManageUsers() {
                   <th className="px-4 lg:px-6 py-4 text-left font-medium w-24">
                     Payments
                   </th>
-                  <th className="px-4 lg:px-6 py-4 text-left font-medium w-32">
+                  <th className="px-4 lg:px-6 py-4 text-left font-medium min-w-34">
                     Last Payment
                   </th>
-                  <th className="px-4 lg:px-6 py-4 text-left font-medium w-40">
+                  <th className="px-4 lg:px-6 py-4 text-left font-medium w-36">
                     Actions
                   </th>
                 </tr>
@@ -207,6 +274,45 @@ export default function ManageUsers() {
               </Button>
             </div>
           </div>
+
+          {/* User Details Dialog */}
+          <UserDetails
+            isOpen={isUserDetailsOpen}
+            onClose={handleCloseDialog}
+            user={selectedUser}
+            // onSave={handleSaveUser}
+            onDelete={handleDelete}
+          />
+          {/* user delete */}
+          <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Delete User</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p className="text-center text-muted-foreground">
+                  Are you sure you want to delete this user? This action cannot
+                  be undone.
+                </p>
+              </div>
+              <DialogFooter>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setIsDeleteOpen(false)}
+                    className="px-4 py-2 border border-border rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => confirmDelete(selectedUser.id)}
+                    className="px-4 py-2 bg-destructive text-white rounded-md hover:bg-destructive/90 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function CreateBanner({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -31,6 +32,7 @@ export default function CreateBanner({ isOpen, onClose, onSuccess }) {
       await axios.post("/api/banner/create", formDataToSend);
 
       onSuccess();
+      toast.success("Banner created successfully");
       onClose();
       setFormData({ redirectUrl: "", url: "" }); // Reset form
     } catch (error) {

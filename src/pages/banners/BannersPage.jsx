@@ -13,6 +13,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function BannersPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,8 +68,10 @@ export default function BannersPage() {
       await fetchingBanners(); // Refresh the list
       setIsDeleteOpen(false);
       setSelectedBanner(null);
+      toast.success("Banner deleted successfully");
     } catch (error) {
       console.error("Error deleting banner:", error);
+      toast.error("Error deleting banner");
     }
   };
 
@@ -77,7 +80,14 @@ export default function BannersPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-col gap-2 sm:flex-row mb-8 bg-white shadow p-3 sm:p-6 border border-border">
         <h1 className=" text-xl sm:text-3xl font-bold flex items-center gap-2">
-          <BiImage /> Manage Banners
+          {/* <BiImage />  */}
+          <lord-icon
+            src="https://cdn.lordicon.com/wahyhize.json"
+            trigger="hover"
+            colors="primary:#000000,secondary:#2e5d36,tertiary:#c71f16,quaternary:#2e5d36,quinary:#ebe6ef,senary:#ffc738,septenary:#f9c9c0"
+            style={{ width: "35px", height: "35px" }}
+          ></lord-icon>
+          Manage Banners
         </h1>
         <button
           onClick={() => setIsCreateOpen(true)}
