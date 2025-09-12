@@ -28,8 +28,15 @@ export default function CreateBanner({ isOpen, onClose, onSuccess }) {
       };
 
       // console.log(formDataToSend);
-
-      await axios.post("/api/banner/create", formDataToSend);
+      const tokenData =
+        JSON.parse(sessionStorage.getItem("tokens")) ||
+        JSON.parse(localStorage.getItem("tokens"));
+      await axios.post("/api/banner/create", formDataToSend, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
 
       onSuccess();
       toast.success("Banner created successfully");

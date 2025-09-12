@@ -16,8 +16,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import ExamTable from "./ExamTable";
-import mockExams from "./MockExams";
 import axios from "axios";
+import ViewExamDialog from "./create/ViewExamDialog";
+import ExamFormDialog from "./create/ExamFormDialog";
+// import CreateExam from "./CreateExam";
 
 export default function ExamsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,16 +27,27 @@ export default function ExamsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [exams, setExams] = useState([]);
   const examsPerPage = 5;
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [dialogMode, setDialogMode] = useState("add"); // 'add', 'edit', 'view'
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const fetchExams = async () => {
+    const tokenData = JSON.parse(sessionStorage.getItem("tokens")) || JSON.parse(localStorage.getItem("tokens"));
+    try {
+      const response = await axios.get("/api/exam", {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+      setExams(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching exams:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const response = await axios.get("/api/exam");
-        setExams(response.data);
-      } catch (error) {
-        console.error("Error fetching exams:", error);
-      }
-    };
     fetchExams();
   }, []);
 
@@ -69,11 +82,16 @@ export default function ExamsPage() {
   const handleView = (exam) => {
     console.log("View exam:", exam);
     // Implement view exam modal/page
+    setSelectedExam(exam);
+    setDialogMode("view");
+    setIsDialogOpen(true);
   };
 
   const handleEdit = (exam) => {
     console.log("Edit exam:", exam);
-    // Implement edit exam modal/page
+    setSelectedExam(exam);
+    setDialogMode("edit");
+    setIsDialogOpen(true);
   };
 
   const handleDelete = (examId) => {
@@ -85,6 +103,33 @@ export default function ExamsPage() {
   const handleAddExam = () => {
     console.log("Add new exam");
     // Implement add exam modal/page
+    setSelectedExam(null);
+    setDialogMode("add");
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveExam = async (examData) => {
+    const tokenData = JSON.parse(sessionStorage.getItem("tokens")) || JSON.parse(localStorage.getItem("tokens"));
+    if (dialogMode === "edit") {
+      // setExams((prev) =>
+      //   prev.map((exam) => (exam.id === examData.id ? examData : exam))
+      // );
+      await axios.put(`/api/exam/${examData.id}`, examData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+    } else {
+      await axios.post("/api/exam", examData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+    }
+    fetchExams();
+    console.log("Saved exam data:", examData);
   };
 
   return (
@@ -195,6 +240,23 @@ export default function ExamsPage() {
               />
             </table>
           </div>
+
+          {/* dialog */}
+          {dialogMode === "view" ? (
+            <ViewExamDialog
+              isOpen={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+              exam={selectedExam}
+            />
+          ) : (
+            <ExamFormDialog
+              isOpen={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+              exam={selectedExam}
+              onSave={handleSaveExam}
+              mode={dialogMode}
+            />
+          )}
 
           {/* Pagination */}
           <div className="p-4 bg-white border-t border-border flex items-center justify-between">

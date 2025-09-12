@@ -39,7 +39,9 @@ export default function ManageUsers() {
   const usersPerPage = 5;
 
   const getUsers = async () => {
-    const tokenData = JSON.parse(localStorage.getItem("tokens"));
+    const tokenData =
+      JSON.parse(sessionStorage.getItem("tokens")) ||
+      JSON.parse(localStorage.getItem("tokens"));
     const fetchedUsers = await axios.get("/api/user/get-users", {
       headers: {
         Authorization: `Bearer ${tokenData.accessToken}`,
@@ -101,7 +103,9 @@ export default function ManageUsers() {
   const confirmDelete = async (userId) => {
     console.log("Deleting user with ID:", userId);
     try {
-      const tokenData = JSON.parse(localStorage.getItem("tokens"));
+      const tokenData =
+        JSON.parse(sessionStorage.getItem("tokens")) ||
+        JSON.parse(localStorage.getItem("tokens"));
 
       await axios.delete(`/api/user/delete-user/${userId}`, {
         headers: {

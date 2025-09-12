@@ -27,7 +27,15 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
         url: formData.url,
       };
 
-      await axios.put(`/api/banner/update/${banner.id}`, formDataToSend);
+      const tokenData =
+        JSON.parse(sessionStorage.getItem("tokens")) ||
+        JSON.parse(localStorage.getItem("tokens"));
+      await axios.put(`/api/banner/update/${banner.id}`, formDataToSend, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
       toast.success("Banner updated successfully");
       onSuccess();
       onClose();

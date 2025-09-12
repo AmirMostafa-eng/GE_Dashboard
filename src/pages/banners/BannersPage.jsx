@@ -63,8 +63,15 @@ export default function BannersPage() {
   };
 
   const confirmDelete = async () => {
+    const tokenData =
+      JSON.parse(sessionStorage.getItem("tokens")) ||
+      JSON.parse(localStorage.getItem("tokens"));
     try {
-      await axios.delete(`/api/banner/delete/${selectedBanner.id}`);
+      await axios.delete(`/api/banner/delete/${selectedBanner.id}`, {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
       await fetchingBanners(); // Refresh the list
       setIsDeleteOpen(false);
       setSelectedBanner(null);

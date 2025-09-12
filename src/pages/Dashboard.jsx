@@ -9,7 +9,7 @@ import ExamsPage from "./exams/ExamsPage";
 import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
-  const [page, setPage] = useState("banners");
+  const [page, setPage] = useState("users");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
