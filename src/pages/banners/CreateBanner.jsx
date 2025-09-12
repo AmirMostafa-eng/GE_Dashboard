@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateBanner({ isOpen, onClose, onSuccess }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     redirectUrl: "",
     url: "",
@@ -43,7 +45,19 @@ export default function CreateBanner({ isOpen, onClose, onSuccess }) {
       onClose();
       setFormData({ redirectUrl: "", url: "" }); // Reset form
     } catch (error) {
-      console.error("Error creating banner:", error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error creating banners:", error);
+        toast.error("Error creating banners");
+      }
     } finally {
       setIsLoading(false);
     }

@@ -107,8 +107,19 @@ export default function BannersPage() {
       setSelectedBanner(null);
       toast.success("Banner deleted successfully");
     } catch (error) {
-      console.error("Error deleting banner:", error);
-      toast.error("Error deleting banner");
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error deleting banners:", error);
+        toast.error("Error deleting banners");
+      }
     }
   };
 
