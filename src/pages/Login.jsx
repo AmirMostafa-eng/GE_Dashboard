@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [stayLoggedIn, setStayLoggedIn] = useState(false);
+  // const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,14 +29,8 @@ export default function Login() {
       console.log("Login attempt:", formData);
 
       const returnedTokens = await axios.post("/api/Auth/login", formData);
-
-      if (stayLoggedIn) {
-        localStorage.setItem("user", JSON.stringify(formData));
-        localStorage.setItem("tokens", JSON.stringify(returnedTokens.data));
-      } else {
-        sessionStorage.setItem("user", JSON.stringify(formData));
-        sessionStorage.setItem("tokens", JSON.stringify(returnedTokens.data));
-      }
+      sessionStorage.setItem("user", JSON.stringify(formData));
+      sessionStorage.setItem("tokens", JSON.stringify(returnedTokens.data));
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);
@@ -142,7 +136,7 @@ export default function Login() {
                 </Button>
 
                 {/* Stay Logged In */}
-                <label
+                {/* <label
                   className={`flex items-center gap-3 cursor-pointer justify-center`}
                 >
                   <div className="relative">
@@ -154,15 +148,15 @@ export default function Login() {
                     />
                     <div
                       className={`
-            flex items-center justify-center w-6 h-6
-            border-2 rounded-md transition-all duration-200 ease-in-out
-            ${
-              stayLoggedIn
-                ? "bg-primary border-primary shadow-md"
-                : "bg-white border-border hover:border-primary/50"
-            }
-            relative
-          `}
+                        flex items-center justify-center w-6 h-6
+                        border-2 rounded-md transition-all duration-200 ease-in-out
+                        ${
+                          stayLoggedIn
+                            ? "bg-primary border-primary shadow-md"
+                            : "bg-white border-border hover:border-primary/50"
+                        }
+                        relative
+                      `}
                     >
                       {stayLoggedIn && (
                         <Check className="w-4 h-4 text-primary-foreground absolute inset-0 m-auto transition-all duration-200" />
@@ -174,7 +168,7 @@ export default function Login() {
                   >
                     Remember Me
                   </span>
-                </label>
+                </label> */}
               </div>
             </CardContent>
           </Card>

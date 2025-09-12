@@ -15,10 +15,10 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
   const checkingUser = () => {
-    const userLocal = localStorage.getItem("user");
+    // const userLocal = localStorage.getItem("user");
     const userSession = sessionStorage.getItem("user");
-    const user = userLocal || userSession;
-    if (user) {
+    // const user = userLocal || userSession;
+    if (userSession) {
       return true;
     } else {
       return false;

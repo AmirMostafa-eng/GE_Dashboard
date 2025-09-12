@@ -19,9 +19,12 @@ import ExamTable from "./ExamTable";
 import axios from "axios";
 import ViewExamDialog from "./create/ViewExamDialog";
 import ExamFormDialog from "./create/ExamFormDialog";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 // import CreateExam from "./CreateExam";
 
 export default function ExamsPage() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [levelFilter, setLevelFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,9 +36,13 @@ export default function ExamsPage() {
   // const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const fetchExams = async () => {
-    const tokenData =
-      JSON.parse(sessionStorage.getItem("tokens")) ||
-      JSON.parse(localStorage.getItem("tokens"));
+    const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
+    if (!tokenData) {
+      console.warn("No token found! Redirecting to login...");
+      sessionStorage.removeItem("user");
+      navigate("/");
+      return;
+    }
     try {
       const response = await axios.get("/api/exam", {
         headers: {
@@ -45,7 +52,17 @@ export default function ExamsPage() {
       setExams(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error("Error fetching exams:", error);
+      if (error.response.status === 401) {
+        // Unauthorized
+        console.warn("Unauthorized! Redirecting to login...");
+        console.log("Please login first");
+        sessionStorage.removeItem("tokens");
+        sessionStorage.removeItem("user");
+        navigate("/");
+      } else {
+        console.error("Error fetching exams:", error);
+        toast.error("Error fetching exams");
+      }
     }
   };
 

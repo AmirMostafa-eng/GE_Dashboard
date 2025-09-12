@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function BannersPage() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [banners, setBanners] = useState([]);
@@ -23,12 +25,40 @@ export default function BannersPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState(null);
+
   const fetchingBanners = async () => {
-    // Fetch banners from API
-    const fetchedBanners = await axios.get("/api/banner/get-all");
-    // Update state
-    setBanners(fetchedBanners.data);
-    console.log(fetchedBanners.data);
+    try {
+      // Fetch banners from API
+      const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
+      if (!tokenData) {
+        console.warn("No token found! Redirecting to login...");
+        sessionStorage.removeItem("user");
+        navigate("/");
+        return;
+      }
+      const fetchedBanners = await axios.get("/api/banner/get-all", {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+      // Update state
+      setBanners(fetchedBanners.data);
+      console.log(fetchedBanners.data);
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error fetching banners:", error);
+        toast.error("Error fetching banners");
+      }
+    }
   };
   useEffect(() => {
     fetchingBanners();

@@ -27,8 +27,10 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageUsers() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -39,16 +41,36 @@ export default function ManageUsers() {
   const usersPerPage = 5;
 
   const getUsers = async () => {
-    const tokenData =
-      JSON.parse(sessionStorage.getItem("tokens")) ||
-      JSON.parse(localStorage.getItem("tokens"));
-    const fetchedUsers = await axios.get("/api/user/get-users", {
-      headers: {
-        Authorization: `Bearer ${tokenData.accessToken}`,
-      },
-    });
-    setUsers(fetchedUsers.data);
-    console.log(fetchedUsers.data);
+    try {
+      const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
+      if (!tokenData) {
+        console.warn("No token found! Redirecting to login...");
+        sessionStorage.removeItem("user");
+        navigate("/");
+        return;
+      }
+      const fetchedUsers = await axios.get("/api/user/get-users", {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+      setUsers(fetchedUsers.data);
+      console.log(fetchedUsers.data);
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error fetching user:", error);
+        toast.error("Error fetching user");
+      }
+    }
   };
 
   useEffect(() => {
@@ -103,9 +125,7 @@ export default function ManageUsers() {
   const confirmDelete = async (userId) => {
     console.log("Deleting user with ID:", userId);
     try {
-      const tokenData =
-        JSON.parse(sessionStorage.getItem("tokens")) ||
-        JSON.parse(localStorage.getItem("tokens"));
+      const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
 
       await axios.delete(`/api/user/delete-user/${userId}`, {
         headers: {
@@ -118,8 +138,19 @@ export default function ManageUsers() {
       setIsUserDetailsOpen(false);
       setSelectedUser(null);
     } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error("Error deleting user");
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error deleting user:", error);
+        toast.error("Error deleting user");
+      }
     }
   };
 
