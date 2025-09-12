@@ -33,7 +33,9 @@ export default function ExamsPage() {
   // const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const fetchExams = async () => {
-    const tokenData = JSON.parse(sessionStorage.getItem("tokens")) || JSON.parse(localStorage.getItem("tokens"));
+    const tokenData =
+      JSON.parse(sessionStorage.getItem("tokens")) ||
+      JSON.parse(localStorage.getItem("tokens"));
     try {
       const response = await axios.get("/api/exam", {
         headers: {
@@ -108,8 +110,15 @@ export default function ExamsPage() {
     setIsDialogOpen(true);
   };
 
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedExam(null);
+  };
+
   const handleSaveExam = async (examData) => {
-    const tokenData = JSON.parse(sessionStorage.getItem("tokens")) || JSON.parse(localStorage.getItem("tokens"));
+    const tokenData =
+      JSON.parse(sessionStorage.getItem("tokens")) ||
+      JSON.parse(localStorage.getItem("tokens"));
     if (dialogMode === "edit") {
       // setExams((prev) =>
       //   prev.map((exam) => (exam.id === examData.id ? examData : exam))
@@ -245,13 +254,13 @@ export default function ExamsPage() {
           {dialogMode === "view" ? (
             <ViewExamDialog
               isOpen={isDialogOpen}
-              onClose={() => setIsDialogOpen(false)}
+              onClose={handleCloseDialog}
               exam={selectedExam}
             />
           ) : (
             <ExamFormDialog
               isOpen={isDialogOpen}
-              onClose={() => setIsDialogOpen(false)}
+              onClose={handleCloseDialog}
               exam={selectedExam}
               onSave={handleSaveExam}
               mode={dialogMode}
