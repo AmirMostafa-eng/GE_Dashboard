@@ -15,6 +15,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import ExamTable from "./ExamTable";
 import axios from "axios";
 import ViewExamDialog from "./create/ViewExamDialog";
@@ -33,8 +40,10 @@ export default function ExamsPage() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [dialogMode, setDialogMode] = useState("add"); // 'add', 'edit', 'view'
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   // const [isCreateOpen, setIsCreateOpen] = useState(false);
 
+  // Fetch exams from API
   const fetchExams = async () => {
     const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
     if (!tokenData) {
@@ -98,6 +107,7 @@ export default function ExamsPage() {
     setCurrentPage(1);
   };
 
+  // view exam
   const handleView = (exam) => {
     console.log("View exam:", exam);
     // Implement view exam modal/page
@@ -106,17 +116,48 @@ export default function ExamsPage() {
     setIsDialogOpen(true);
   };
 
+  // delete exam ============
+  const handleDelete = (examId) => {
+    const exam = exams.find((e) => e.id === examId);
+    setSelectedExam(exam);
+    setIsDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
+    try {
+      await axios.delete(`/api/exam/${selectedExam.id}`, {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      });
+      await fetchExams(); // Refresh the list
+      setIsDeleteOpen(false);
+      setSelectedExam(null);
+      toast.success("Exam deleted successfully");
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Unauthorized
+          console.warn("Unauthorized! Redirecting to login...");
+          console.log("Please login first");
+          sessionStorage.removeItem("tokens");
+          sessionStorage.removeItem("user");
+          navigate("/");
+        }
+      } else {
+        console.error("Error deleting exam:", error);
+        toast.error("Error deleting exam");
+      }
+    }
+  };
+  // ==================
+
   const handleEdit = (exam) => {
     console.log("Edit exam:", exam);
     setSelectedExam(exam);
     setDialogMode("edit");
     setIsDialogOpen(true);
-  };
-
-  const handleDelete = (examId) => {
-    if (window.confirm("Are you sure you want to delete this exam?")) {
-      setExams((prev) => prev.filter((exam) => exam.id !== examId));
-    }
   };
 
   const handleAddExam = () => {
@@ -132,27 +173,58 @@ export default function ExamsPage() {
     setSelectedExam(null);
   };
 
+  // add and edit exam
   const handleSaveExam = async (examData) => {
-    const tokenData =
-      JSON.parse(sessionStorage.getItem("tokens")) ||
-      JSON.parse(localStorage.getItem("tokens"));
+    const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
+    // edit exam
     if (dialogMode === "edit") {
-      // setExams((prev) =>
-      //   prev.map((exam) => (exam.id === examData.id ? examData : exam))
-      // );
-      await axios.put(`/api/exam/${examData.id}`, examData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tokenData.accessToken}`,
-        },
-      });
+      try {
+        await axios.put(`/api/exam/${examData.id}`, examData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenData.accessToken}`,
+          },
+        });
+        toast.success("Exam updated successfully");
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            // Unauthorized
+            console.warn("Unauthorized! Redirecting to login...");
+            console.log("Please login first");
+            sessionStorage.removeItem("tokens");
+            sessionStorage.removeItem("user");
+            navigate("/");
+          }
+        }
+        console.error("Error updating exam:", error);
+        toast.error("Error updating exam");
+      }
+      // add exam
     } else {
-      await axios.post("/api/exam", examData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tokenData.accessToken}`,
-        },
-      });
+      try {
+        console.log("Creating new exam:", examData);
+        await axios.post("/api/exam", examData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenData.accessToken}`,
+          },
+        });
+        toast.success("Exam created successfully");
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            // Unauthorized
+            console.warn("Unauthorized! Redirecting to login...");
+            console.log("Please login first");
+            sessionStorage.removeItem("tokens");
+            sessionStorage.removeItem("user");
+            navigate("/");
+          }
+        }
+        console.error("Error creating exam:", error);
+        toast.error("Error creating exam");
+      }
     }
     fetchExams();
     console.log("Saved exam data:", examData);
@@ -229,7 +301,7 @@ export default function ExamsPage() {
       </div>
 
       {/* Exams Table */}
-      <div className="mx-4 lg:mx-10 rounded-2xl overflow-hidden">
+      <div className="mx-4 lg:mx-10 rounded-2xl overflow-hidden border border-border">
         <div className="shadow-sm rounded-lg border border-border bg-white">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -244,9 +316,9 @@ export default function ExamsPage() {
                   <th className="px-4 lg:px-6 py-4 text-left font-medium w-24">
                     Level
                   </th>
-                  <th className="px-4 lg:px-6 py-4 text-left font-medium min-w-[200px]">
+                  {/* <th className="px-4 lg:px-6 py-4 text-left font-medium min-w-[200px]">
                     Description
-                  </th>
+                  </th> */}
                   <th className="px-3 lg:px-3 py-4 text-left font-medium w-36">
                     Created At
                   </th>
@@ -283,6 +355,36 @@ export default function ExamsPage() {
               mode={dialogMode}
             />
           )}
+
+          <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Delete Exam</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p className="text-center text-muted-foreground">
+                  Are you sure you want to delete this exam? This action cannot
+                  be undone.
+                </p>
+              </div>
+              <DialogFooter>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setIsDeleteOpen(false)}
+                    className="px-4 py-2 border border-border rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    className="px-4 py-2 bg-destructive text-white rounded-md hover:bg-destructive/90 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {/* Pagination */}
           <div className="p-4 bg-white border-t border-border flex items-center justify-between">

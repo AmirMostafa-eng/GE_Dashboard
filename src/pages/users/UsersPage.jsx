@@ -245,7 +245,7 @@ export default function ManageUsers() {
       </div>
 
       {/* Users Table */}
-      <div className="mx-4 lg:mx-10 rounded-xl overflow-hidden">
+      <div className="mx-4 lg:mx-10 rounded-xl overflow-hidden border border-border">
         <div className="shadow-sm rounded-lg border border-border bg-white">
           <div className="overflow-x-auto">
             <table className="w-full">

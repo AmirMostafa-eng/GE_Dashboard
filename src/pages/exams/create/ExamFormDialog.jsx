@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,15 +18,36 @@ import {
 } from "@/components/ui/dialog";
 import { X, Plus, Save, BookOpen } from "lucide-react";
 import SkillForm from "./SkillForm";
+// import toast from "react-hot-toast";
+import validateExam from "@/utils/ExamFormValidate";
 
 const GERMAN_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 function ExamFormDialog({ isOpen, onClose, exam, onSave, mode = "add" }) {
   const [formData, setFormData] = useState({
-    title: exam?.title || "",
-    level: exam?.level || "A1",
-    description: exam?.description || "",
-    skills: exam?.skills || [],
+    title: "",
+    level: "A1",
+    description: "",
+    skills: [],
   });
+
+  useEffect(() => {
+    if (exam) {
+      setFormData({
+        title: exam.title || "",
+        level: exam.level || "A1",
+        description: exam.description || "",
+        skills: exam.skills || [],
+      });
+    } else {
+      // Reset for "add" mode
+      setFormData({
+        title: "",
+        level: "A1",
+        description: "",
+        skills: [],
+      });
+    }
+  }, [exam, mode, isOpen]);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -34,7 +55,7 @@ function ExamFormDialog({ isOpen, onClose, exam, onSave, mode = "add" }) {
 
   const addSkill = () => {
     const newSkill = {
-      id: Date.now(),
+      // id: Date.now(),
       name: "",
       description: "",
       audioUrl: "",
@@ -58,9 +79,19 @@ function ExamFormDialog({ isOpen, onClose, exam, onSave, mode = "add" }) {
   };
 
   const handleSave = () => {
-    const examData = {
-      ...formData,
-    };
+    // checking data validation before sending
+    if (validateExam(formData) === false) return;
+    console.log(formData);
+
+    let examData;
+    if (mode === "edit" && exam) {
+      examData = {
+        ...formData,
+        id: exam.id,
+      };
+    } else {
+      examData = { ...formData };
+    }
     onSave(examData);
     onClose();
   };
@@ -72,7 +103,8 @@ function ExamFormDialog({ isOpen, onClose, exam, onSave, mode = "add" }) {
           <div className="flex items-center gap-2">
             <BookOpen size={20} />
             <DialogTitle>
-              {mode === "edit" ? "Edit" : "Add New"} Exam
+              {mode === "edit" ? "Edit" : "Add New"} Exam{" "}
+              {formData.title && `- ${formData.title}`}
             </DialogTitle>
           </div>
           {/* <button onClick={onClose}>

@@ -27,11 +27,8 @@ export default function SkillForm({ skill, onChange, onDelete }) {
 
   const addStory = () => {
     const newStory = {
-      id: Date.now(),
       title: "",
       description: "",
-      audioUrl: null,
-      skill: null,
       questions: [],
     };
     updateSkill("stories", [...(skill.stories || []), newStory]);

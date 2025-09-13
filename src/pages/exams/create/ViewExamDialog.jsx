@@ -181,12 +181,12 @@ function ViewExamDialog({ isOpen, onClose, exam }) {
                         <div className="px-3 pb-3 border-t bg-white">
                           {/* Story Description */}
                           {story.description && (
-                            <div className="mb-3 pt-3">
+                            <div className="mb-3 pt-3 flex gap-2">
                               <div className="text-xs font-medium text-muted-foreground mb-1">
                                 Story Description:
                               </div>
                               <div
-                                className="text-sm text-muted-foreground prose prose-sm max-w-none"
+                                className="text-sm text-primary prose prose-sm max-w-none "
                                 dangerouslySetInnerHTML={{
                                   __html: story.description,
                                 }}

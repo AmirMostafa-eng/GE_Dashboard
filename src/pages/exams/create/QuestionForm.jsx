@@ -42,15 +42,13 @@ export default function QuestionForm({ question, onChange, onDelete }) {
     }
 
     const newAnswer = {
-      id: Date.now(),
-      questionText:
+      text:
         question.type === "true_false"
           ? question.answers?.length === 0
             ? "True"
             : "False"
           : "",
       isCorrect: false,
-      question: null,
     };
 
     updateQuestion("answers", [...(question.answers || []), newAnswer]);
@@ -101,15 +99,15 @@ export default function QuestionForm({ question, onChange, onDelete }) {
                 updateQuestion("answers", [
                   {
                     id: Date.now(),
-                    questionText: "True",
+                    text: "True",
                     isCorrect: false,
-                    question: null,
+                    // question: null,
                   },
                   {
                     id: Date.now() + 1,
-                    questionText: "False",
+                    text: "False",
                     isCorrect: false,
-                    question: null,
+                    // question: null,
                   },
                 ]);
               }
@@ -137,8 +135,8 @@ export default function QuestionForm({ question, onChange, onDelete }) {
         <div className="space-y-2">
           <Label>Question Text</Label>
           <Textarea
-            value={question.text || ""}
-            onChange={(e) => updateQuestion("text", e.target.value)}
+            value={question.questionText || ""}
+            onChange={(e) => updateQuestion("questionText", e.target.value)}
             placeholder="Enter your question..."
             className="bg-white resize-none"
             rows={3}
@@ -169,7 +167,7 @@ export default function QuestionForm({ question, onChange, onDelete }) {
           />
         </div>
 
-        {/* Answers */}
+        {/* Answers ===========================================================*/}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label>Answers</Label>
@@ -195,12 +193,13 @@ export default function QuestionForm({ question, onChange, onDelete }) {
             >
               <div className="flex-1 space-y-2">
                 <Input
-                  value={answer.questionText || ""}
+                  value={answer.text || ""}
                   onChange={(e) =>
-                    updateAnswer(answerIndex, "questionText", e.target.value)
+                    updateAnswer(answerIndex, "text", e.target.value)
                   }
                   placeholder={getAnswerPlaceholder(question.type)}
                   className="bg-white"
+                  disabled={question.type === "true_false"}
                 />
                 <div className="flex items-center gap-2">
                   <input

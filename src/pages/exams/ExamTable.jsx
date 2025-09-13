@@ -51,7 +51,7 @@ export default function ExamTable({ exams, onView, onEdit, onDelete }) {
           <td className="px-4 lg:px-6 py-4">{getLevelBadge(exam.level)}</td>
 
           {/* Description */}
-          <td className="px-4 lg:px-6 py-4 min-w-[200px]">
+          {/* <td className="px-4 lg:px-6 py-4 min-w-[200px]">
             <div className="max-w-xs">
               <span
                 className="text-muted-foreground text-sm block truncate"
@@ -60,7 +60,7 @@ export default function ExamTable({ exams, onView, onEdit, onDelete }) {
                 {exam.description}
               </span>
             </div>
-          </td>
+          </td> */}
 
           {/* Created At */}
           <td className="px-4 lg:px-6 py-4">

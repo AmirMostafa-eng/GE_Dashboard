@@ -14,12 +14,12 @@ export default function StoryForm({ story, onChange, onDelete }) {
 
   const addQuestion = () => {
     const newQuestion = {
-      id: Date.now(),
+      // id: Date.now(),
       type: "single_choice",
-      text: "",
+      questionText: "",
       explanation: "",
       score: 1,
-      story: null,
+      // story: null,
       answers: [],
     };
     updateStory("questions", [...(story.questions || []), newQuestion]);
