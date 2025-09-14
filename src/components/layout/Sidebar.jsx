@@ -142,20 +142,12 @@ export default function Sidebar({
         <button
           onClick={handleLogout}
           className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-lg h-12
-                  text-left transition-all duration-200 font-semibold text-white hover:bg-sidebar-foreground/10 hover:text-white
+                  w-full flex items-center gap-3 px-4 py-3 rounded-lg h-12 hover:bg-sidebar-foreground hover:text-foreground hover:shadow-sm
+                  text-left transition-all duration-200 font-semibold text-white bg-sidebar-foreground/10 
                   
                   ${!isOpen ? "justify-center" : ""}
                 `}
         >
-          {/* <Icon
-            size={20}
-            className={`
-                    flex-shrink-0 transition-all duration-200
-                    
-                  `}
-          /> */}
-
           <FiLogIn
             size={20}
             className={`

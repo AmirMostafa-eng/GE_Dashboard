@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { FiLogIn } from "react-icons/fi";
 import Sidebar from "@/components/layout/Sidebar";
 import UsersPage from "./users/UsersPage";
 import BannersPage from "./banners/BannersPage";
 import ExamsPage from "./exams/ExamsPage";
 import { Toaster } from "react-hot-toast";
+import { BiSolidLogIn } from "react-icons/bi";
+import { CircleArrowRight } from "lucide-react";
 
 export default function Dashboard() {
   const [page, setPage] = useState("users");
@@ -113,18 +114,24 @@ export default function Dashboard() {
           className="flex flex-col items-center justify-center bg-cover bg-center"
           style={{
             height: "100vh",
-            backgroundImage:
-              "url('/A friendly cartoon-style character in flat vector illustration, standing on.jpg')",
+            // backgroundImage:
+            //   "url('/A friendly cartoon-style character in flat vector illustration, standing on.jpg')",
+            backgroundColor: "#DFEBD3",
           }}
         >
           {/* <img src="/A friendly cartoon-style character in flat vector illustration, standing on.jpg" /> */}
-          <Button
+          <div
             onClick={() => navigate("/login")}
-            className="mt-40 text-white font-semibold text-xl cursor-pointer"
+            className="text-white cursor-pointer"
             variant="transparent"
           >
-            <FiLogIn className="" /> Login
-          </Button>
+            <img
+              src="/public/A_friendly_cartoon-style_character_in_flat_vector_illustration__standing_on-removebg-preview.png"
+              alt="login"
+              srcset=""
+              className="hover:drop-shadow-2xl transition-all duration-200"
+            />
+          </div>
         </div>
       )}
     </div>

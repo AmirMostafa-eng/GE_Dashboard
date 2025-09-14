@@ -51,6 +51,7 @@ function EditExamDialog({ isOpen, onClose, exam, onSave }) {
       description: "",
       audioUrl: "",
       stories: [],
+      isNew: true, // Flag to indicate this is a newly added skill
     };
     updateFormData("skills", [...formData.skills, newSkill]);
   };
@@ -69,11 +70,34 @@ function EditExamDialog({ isOpen, onClose, exam, onSave }) {
     updateFormData("skills", updatedSkills);
   };
 
+  const cleanIsNewFlags = (obj) => {
+    if (!obj || typeof obj !== "object") return obj;
+
+    const cleaned = { ...obj };
+    if ("isNew" in cleaned) {
+      delete cleaned.isNew;
+    }
+
+    // Clean arrays
+    Object.keys(cleaned).forEach((key) => {
+      if (Array.isArray(cleaned[key])) {
+        cleaned[key] = cleaned[key].map((item) => cleanIsNewFlags(item));
+      } else if (typeof cleaned[key] === "object") {
+        cleaned[key] = cleanIsNewFlags(cleaned[key]);
+      }
+    });
+
+    return cleaned;
+  };
+
   const handleSave = () => {
     if (validateExam(formData) === false) return;
 
+    // Clean up isNew flags from the entire data structure
+    const cleanedData = cleanIsNewFlags(formData);
+
     const examData = {
-      ...formData,
+      ...cleanedData,
       id: exam.id,
     };
     onSave(examData);

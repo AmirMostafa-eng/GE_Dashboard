@@ -30,6 +30,7 @@ export default function EditSkillForm({ skill, onChange, onDelete }) {
       title: "",
       description: "",
       questions: [],
+      isNew: true, // Flag to indicate this is a newly added story
     };
     updateSkill("stories", [...(skill.stories || []), newStory]);
   };
@@ -55,14 +56,16 @@ export default function EditSkillForm({ skill, onChange, onDelete }) {
           <CardTitle className="text-lg font-semibold text-secondary-foreground">
             Skill: {skill.name || "Select skill type"}
           </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            className="text-destructive hover:text-destructive"
-          >
-            <Trash2 size={14} />
-          </Button>
+          {skill.isNew && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDelete}
+              className="text-destructive hover:text-destructive"
+            >
+              <Trash2 size={14} />
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="pt-4 space-y-4">

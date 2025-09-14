@@ -39,7 +39,7 @@ export default function validateExam(formData) {
       const story = skill.stories[storyIndex];
       if (story.title.trim() === "") {
         toast.error(
-          `Please enter a title for story : (${story.title}) number ${
+          `Please enter a title for story number ${
             storyIndex + 1
           } in skill : (${skill.name}) number ${index + 1}.`
         );

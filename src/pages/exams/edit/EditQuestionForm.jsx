@@ -45,6 +45,7 @@ export default function EditQuestionForm({ question, onChange, onDelete }) {
             : "False"
           : "",
       isCorrect: false,
+      isNew: true, // Flag to indicate this is a newly added answer
     };
 
     updateQuestion("answers", [...(question.answers || []), newAnswer]);
@@ -74,14 +75,16 @@ export default function EditQuestionForm({ question, onChange, onDelete }) {
         <CardTitle className="text-sm font-medium text-secondary-foreground">
           Question
         </CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onDelete}
-          className="text-destructive hover:text-destructive"
-        >
-          <Trash2 size={14} />
-        </Button>
+        {question.isNew && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onDelete}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 size={14} />
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Question Type */}
@@ -90,23 +93,26 @@ export default function EditQuestionForm({ question, onChange, onDelete }) {
           <Select
             value={question.type}
             onValueChange={(value) => {
-              if (value === "true_false") {
-                // Set up true/false answers
-                updateQuestion("answers", [
-                  {
-                    id: Date.now(),
-                    questionText: "True",
-                    isCorrect: false,
-                  },
-                  {
-                    id: Date.now() + 1,
-                    questionText: "False",
-                    isCorrect: false,
-                  },
-                ]);
+              if (question.isNew) {
+                if (value === "true_false") {
+                  // Set up true/false answers
+                  updateQuestion("answers", [
+                    {
+                      id: Date.now(),
+                      questionText: "True",
+                      isCorrect: false,
+                    },
+                    {
+                      id: Date.now() + 1,
+                      questionText: "False",
+                      isCorrect: false,
+                    },
+                  ]);
+                }
+                updateQuestion("type", value);
               }
-              updateQuestion("type", value);
             }}
+            disabled={!question.isNew}
           >
             <SelectTrigger className="bg-white">
               <SelectValue />
@@ -228,14 +234,16 @@ export default function EditQuestionForm({ question, onChange, onDelete }) {
                   </span>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => removeAnswer(answerIndex)}
-                className="text-destructive"
-              >
-                <Trash2 size={14} />
-              </Button>
+              {(question.isNew || answer.isNew) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeAnswer(answerIndex)}
+                  className="text-destructive"
+                >
+                  <Trash2 size={14} />
+                </Button>
+              )}
             </div>
           ))}
         </div>

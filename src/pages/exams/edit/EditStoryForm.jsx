@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import EditQuestionForm from "./EditQuestionForm";
 
 export default function EditStoryForm({ story, onChange, onDelete }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const updateStory = (field, value) => {
     onChange({ ...story, [field]: value });
   };
@@ -18,6 +20,7 @@ export default function EditStoryForm({ story, onChange, onDelete }) {
       explanation: "",
       score: 1,
       answers: [],
+      isNew: true, // Flag to indicate this is a newly added question
     };
     updateStory("questions", [...(story.questions || []), newQuestion]);
   };
@@ -38,20 +41,35 @@ export default function EditStoryForm({ story, onChange, onDelete }) {
 
   return (
     <Card className="mb-4">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 py-3 mb-3 bg-secondary/20">
-        <CardTitle className="text-sm font-bold text-secondary-foreground">
-          Story: {story.title || "Untitled"}
-        </CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onDelete}
-          className="text-destructive hover:text-destructive"
-        >
-          <Trash2 size={14} />
-        </Button>
+      <CardHeader
+        className="flex flex-row items-center justify-between space-y-0 py-3 mb-3 bg-secondary/20 cursor-pointer"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <div className="flex items-center gap-2">
+          {isCollapsed ? (
+            <ChevronRight size={20} className="text-secondary-foreground" />
+          ) : (
+            <ChevronDown size={20} className="text-secondary-foreground" />
+          )}
+          <CardTitle className="text-sm font-bold text-secondary-foreground">
+            Story: {story.title || "Untitled"}
+          </CardTitle>
+        </div>
+        {story.isNew && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent collapse toggle when clicking delete
+              onDelete();
+            }}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 size={14} />
+          </Button>
+        )}
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className={`space-y-4 ${isCollapsed ? "hidden" : ""}`}>
         {/* Story Title */}
         <div className="space-y-2">
           <Label>Story Title</Label>
