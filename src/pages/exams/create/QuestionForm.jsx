@@ -136,8 +136,8 @@ export default function QuestionForm({ question, onChange, onDelete }) {
         <div className="space-y-2">
           <Label>Question Text</Label>
           <Textarea
-            value={question.text || ""}
-            onChange={(e) => updateQuestion("text", e.target.value)}
+            value={question.questionText || ""}
+            onChange={(e) => updateQuestion("questionText", e.target.value)}
             placeholder="Enter your question..."
             className="bg-white resize-none"
             rows={3}

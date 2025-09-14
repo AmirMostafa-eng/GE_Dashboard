@@ -68,6 +68,7 @@ export default function validateExam(formData) {
               skill.name
             } number ${index + 1}.`
           );
+          console.log(skill);
           return false;
         }
         // if (question.answers.length === 0) {

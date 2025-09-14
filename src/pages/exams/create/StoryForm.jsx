@@ -40,7 +40,7 @@ export default function StoryForm({ story, onChange, onDelete }) {
   };
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 border-2 border-accent-foreground">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 py-3 mb-3 bg-secondary/20">
         <CardTitle className="text-sm font-bold text-secondary-foreground">
           Story: {story.title || "Untitled"}

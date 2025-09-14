@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { Menu, X, Users, Image, FileText, BarChart3, Icon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { FiLogIn } from "react-icons/fi";
 
 export default function Sidebar({
   activeSection,
@@ -8,6 +10,7 @@ export default function Sidebar({
   isOpen,
   windowWidth,
 }) {
+  const navigate = useNavigate();
   // Collapse automatically on screens < lg
 
   const toggleSidebar = () => {
@@ -37,6 +40,12 @@ export default function Sidebar({
   ];
 
   const IconDashboard = BarChart3;
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("tokens");
+    navigate("/login");
+  };
 
   return (
     <div
@@ -83,7 +92,7 @@ export default function Sidebar({
       </div>
 
       {/* Navigation Menu */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col justify-between min-h-[75vh]">
         <nav className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -128,6 +137,47 @@ export default function Sidebar({
             );
           })}
         </nav>
+
+        {/* logout button */}
+        <button
+          onClick={handleLogout}
+          className={`
+                  w-full flex items-center gap-3 px-4 py-3 rounded-lg h-12
+                  text-left transition-all duration-200 font-semibold text-white hover:bg-sidebar-foreground/10 hover:text-white
+                  
+                  ${!isOpen ? "justify-center" : ""}
+                `}
+        >
+          {/* <Icon
+            size={20}
+            className={`
+                    flex-shrink-0 transition-all duration-200
+                    
+                  `}
+          /> */}
+
+          <FiLogIn
+            size={20}
+            className={`
+                    flex-shrink-0 transition-all duration-200
+                  `}
+          />
+
+          {/* Text label - only show when expanded */}
+          <span
+            className={`
+                  transition-all duration-300
+                  ${
+                    isOpen
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 -translate-x-4"
+                  }
+                  ${!isOpen ? "hidden" : "block"}
+                `}
+          >
+            Logout
+          </span>
+        </button>
       </div>
     </div>
   );
