@@ -16,13 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { X, Plus, Save, BookOpen } from "lucide-react";
-import SkillForm from "./SkillForm";
-// import toast from "react-hot-toast";
-import validateExam from "@/utils/ExamFormValidate";
+import { BookOpen, Plus, Save } from "lucide-react";
+import validateExam from "@/utils/EditFormValidate";
+import EditSkillForm from "./EditSkillForm";
 
 const GERMAN_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
-function ExamFormDialog({ isOpen, onClose, onSave }) {
+
+function EditExamDialog({ isOpen, onClose, exam, onSave }) {
   const [formData, setFormData] = useState({
     title: "",
     level: "A1",
@@ -31,16 +31,15 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
   });
 
   useEffect(() => {
-    // Reset form data when dialog opens
-    if (isOpen) {
+    if (exam) {
       setFormData({
-        title: "",
-        level: "A1",
-        description: "",
-        skills: [],
+        title: exam.title || "",
+        level: exam.level || "A1",
+        description: exam.description || "",
+        skills: exam.skills || [],
       });
     }
-  }, [isOpen]);
+  }, [exam, isOpen]);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -48,7 +47,6 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
 
   const addSkill = () => {
     const newSkill = {
-      // id: Date.now(),
       name: "",
       description: "",
       audioUrl: "",
@@ -72,10 +70,13 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
   };
 
   const handleSave = () => {
-    // checking data validation before sending
     if (validateExam(formData) === false) return;
 
-    onSave(formData);
+    const examData = {
+      ...formData,
+      id: exam.id,
+    };
+    onSave(examData);
     onClose();
   };
 
@@ -86,12 +87,9 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
           <div className="flex items-center gap-2">
             <BookOpen size={20} />
             <DialogTitle>
-              Add New Exam {formData.title && `- ${formData.title}`}
+              Edit Exam {formData.title && `- ${formData.title}`}
             </DialogTitle>
           </div>
-          {/* <button onClick={onClose}>
-            <X className="h-4 w-4" />
-          </button> */}
         </DialogHeader>
 
         <div className="space-y-6">
@@ -104,7 +102,6 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
                 value={formData.title}
                 onChange={(e) => updateFormData("title", e.target.value)}
                 placeholder="Enter exam title..."
-                // required
               />
             </div>
             <div className="space-y-2">
@@ -150,7 +147,7 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
             </div>
 
             {formData.skills.map((skill, skillIndex) => (
-              <SkillForm
+              <EditSkillForm
                 key={skill.id || skillIndex}
                 skill={skill}
                 onChange={(updatedSkill) =>
@@ -168,7 +165,7 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
             </Button>
             <Button onClick={handleSave}>
               <Save size={14} className="mr-1" />
-              Create Exam
+              Save Changes
             </Button>
           </div>
         </div>
@@ -177,4 +174,4 @@ function ExamFormDialog({ isOpen, onClose, onSave }) {
   );
 }
 
-export default ExamFormDialog;
+export default EditExamDialog;

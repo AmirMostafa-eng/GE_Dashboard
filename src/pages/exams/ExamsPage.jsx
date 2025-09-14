@@ -28,6 +28,7 @@ import ViewExamDialog from "./create/ViewExamDialog";
 import ExamFormDialog from "./create/ExamFormDialog";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import EditExamDialog from "./edit/EditExamDialog";
 // import CreateExam from "./CreateExam";
 
 export default function ExamsPage() {
@@ -179,6 +180,7 @@ export default function ExamsPage() {
     // edit exam
     if (dialogMode === "edit") {
       try {
+        console.log("Updating exam:", examData);
         await axios.put(`/api/exam/${examData.id}`, examData, {
           headers: {
             "Content-Type": "application/json",
@@ -346,13 +348,20 @@ export default function ExamsPage() {
               onClose={handleCloseDialog}
               exam={selectedExam}
             />
+          ) : dialogMode === "edit" ? (
+            <EditExamDialog
+              isOpen={isDialogOpen}
+              onClose={handleCloseDialog}
+              exam={selectedExam}
+              onSave={handleSaveExam}
+            />
           ) : (
             <ExamFormDialog
               isOpen={isDialogOpen}
               onClose={handleCloseDialog}
               exam={selectedExam}
               onSave={handleSaveExam}
-              mode={dialogMode}
+              // mode={dialogMode}
             />
           )}
 

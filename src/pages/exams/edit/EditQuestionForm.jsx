@@ -19,11 +19,7 @@ const QUESTION_TYPES = [
   { value: "matching", label: "Matching" },
 ];
 
-// German levels
-const GERMAN_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
-
-// Question Form Component
-export default function QuestionForm({ question, onChange, onDelete }) {
+export default function EditQuestionForm({ question, onChange, onDelete }) {
   const updateQuestion = (field, value) => {
     onChange({ ...question, [field]: value });
   };
@@ -41,9 +37,8 @@ export default function QuestionForm({ question, onChange, onDelete }) {
       return;
     }
 
-    let newAnswer;
-    newAnswer = {
-      text:
+    const newAnswer = {
+      questionText:
         question.type === "true_false"
           ? question.answers?.length === 0
             ? "True"
@@ -100,15 +95,13 @@ export default function QuestionForm({ question, onChange, onDelete }) {
                 updateQuestion("answers", [
                   {
                     id: Date.now(),
-                    text: "True",
+                    questionText: "True",
                     isCorrect: false,
-                    // question: null,
                   },
                   {
                     id: Date.now() + 1,
-                    text: "False",
+                    questionText: "False",
                     isCorrect: false,
-                    // question: null,
                   },
                 ]);
               }
@@ -168,7 +161,7 @@ export default function QuestionForm({ question, onChange, onDelete }) {
           />
         </div>
 
-        {/* Answers ===========================================================*/}
+        {/* Answers */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label>Answers</Label>
@@ -194,9 +187,9 @@ export default function QuestionForm({ question, onChange, onDelete }) {
             >
               <div className="flex-1 space-y-2">
                 <Input
-                  value={answer.text || ""}
+                  value={answer.questionText || ""}
                   onChange={(e) =>
-                    updateAnswer(answerIndex, "text", e.target.value)
+                    updateAnswer(answerIndex, "questionText", e.target.value)
                   }
                   placeholder={getAnswerPlaceholder(question.type)}
                   className="bg-white"
@@ -240,8 +233,6 @@ export default function QuestionForm({ question, onChange, onDelete }) {
                 size="sm"
                 onClick={() => removeAnswer(answerIndex)}
                 className="text-destructive"
-                // Disable remove button for true/false questions
-                // disabled={question.type === "true_false"}
               >
                 <Trash2 size={14} />
               </Button>
