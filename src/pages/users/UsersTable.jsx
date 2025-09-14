@@ -111,6 +111,7 @@ export default function UserTable({ users, onView, onDelete }) {
               <Button
                 size="sm"
                 variant="destructive"
+                disabled={user.role === "Admin"}
                 onClick={() => onDelete(user.id)}
               >
                 <Trash2 size={12} className="mr-1" />

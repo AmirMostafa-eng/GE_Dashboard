@@ -42,18 +42,18 @@ export default function StoryForm({ story, onChange, onDelete }) {
   };
 
   return (
-    <Card className="mb-4 border-2 border-accent-foreground">
+    <Card className="mb-4 border-none shadow shadow-accent-foreground overflow-hidden">
       <CardHeader
-        className="flex flex-row items-center justify-between space-y-0 py-3 mb-3 bg-secondary/20 cursor-pointer"
+        className="flex flex-row items-center justify-between space-y-0 py-3 bg-primary cursor-pointer"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
         <div className="flex items-center gap-2">
           {isCollapsed ? (
-            <ChevronRight size={20} className="text-secondary-foreground" />
+            <ChevronRight size={20} className="text-black" />
           ) : (
-            <ChevronDown size={20} className="text-secondary-foreground" />
+            <ChevronDown size={20} className="text-black" />
           )}
-          <CardTitle className="text-sm font-bold text-secondary-foreground">
+          <CardTitle className="text-sm font-bold text-black">
             Story: {story.title || "Untitled"}
           </CardTitle>
         </div>
@@ -69,7 +69,7 @@ export default function StoryForm({ story, onChange, onDelete }) {
           <Trash2 size={14} />
         </Button>
       </CardHeader>
-      <CardContent className={`space-y-4 ${isCollapsed ? "hidden" : ""}`}>
+      <CardContent className={`space-y-4 ${isCollapsed ? "hidden" : "pt-4"}`}>
         {/* Story Title */}
         <div className="space-y-2">
           <Label>Story Title</Label>

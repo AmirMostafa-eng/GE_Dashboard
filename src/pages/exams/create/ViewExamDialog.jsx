@@ -150,17 +150,17 @@ function ViewExamDialog({ isOpen, onClose, exam }) {
                   return (
                     <div
                       key={story.id || storyIndex}
-                      className="mb-4 border rounded-lg overflow-hidden"
+                      className="mb-4 rounded-lg overflow-hidden border-2 border-secondary"
                     >
                       {/* Story Header - Clickable */}
                       <Button
                         variant="ghost"
-                        className="w-full p-3 text-left hover:bg-muted/50 justify-start"
+                        className="w-full p-3 text-left bg-primary hover:bg-primary/70 justify-start"
                         onClick={() =>
                           toggleStoryExpansion(skillIndex, storyIndex)
                         }
                       >
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center justify-between w-full ">
                           <div className="flex items-center gap-2">
                             {isExpanded ? (
                               <ChevronDown size={16} />
@@ -186,7 +186,7 @@ function ViewExamDialog({ isOpen, onClose, exam }) {
                                 Story Description:
                               </div>
                               <div
-                                className="text-sm text-primary prose prose-sm max-w-none "
+                                className="text-sm text-foreground prose prose-sm max-w-none "
                                 dangerouslySetInnerHTML={{
                                   __html: story.description,
                                 }}

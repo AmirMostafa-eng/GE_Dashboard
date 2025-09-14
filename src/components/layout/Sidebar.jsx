@@ -2,6 +2,14 @@
 import { Menu, X, Users, Image, FileText, BarChart3, Icon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FiLogIn } from "react-icons/fi";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function Sidebar({
   activeSection,
@@ -11,6 +19,8 @@ export default function Sidebar({
   windowWidth,
 }) {
   const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   // Collapse automatically on screens < lg
 
   const toggleSidebar = () => {
@@ -91,6 +101,35 @@ export default function Sidebar({
         </div>
       </div>
 
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Logging Out</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-center text-muted-foreground">
+              Are you sure you want to logout
+            </p>
+          </div>
+          <DialogFooter>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setIsDialogOpen(false)}
+                className="px-4 py-2 border border-border rounded-md hover:bg-secondary transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-destructive text-white rounded-md hover:bg-destructive/90 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Navigation Menu */}
       <div className="p-4 flex flex-col justify-between min-h-[75vh]">
         <nav className="space-y-2">
@@ -140,7 +179,7 @@ export default function Sidebar({
 
         {/* logout button */}
         <button
-          onClick={handleLogout}
+          onClick={() => setIsDialogOpen(true)}
           className={`
                   w-full flex items-center gap-3 px-4 py-3 rounded-lg h-12 hover:bg-sidebar-foreground hover:text-foreground hover:shadow-sm
                   text-left transition-all duration-200 font-semibold text-white bg-sidebar-foreground/10 
@@ -150,9 +189,7 @@ export default function Sidebar({
         >
           <FiLogIn
             size={20}
-            className={`
-                    flex-shrink-0 transition-all duration-200
-                  `}
+            className={`flex-shrink-0 transition-all duration-200`}
           />
 
           {/* Text label - only show when expanded */}
