@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import api from "api/axios";
+import api from "@/api/axios";
 
 export default function ManageUsers() {
   const navigate = useNavigate();

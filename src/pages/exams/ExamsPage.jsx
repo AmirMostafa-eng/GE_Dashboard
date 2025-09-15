@@ -29,7 +29,7 @@ import ExamFormDialog from "./create/ExamFormDialog";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import EditExamDialog from "./edit/EditExamDialog";
-import api from "api/axios";
+import api from "@/api/axios";
 // import CreateExam from "./CreateExam";
 
 export default function ExamsPage() {

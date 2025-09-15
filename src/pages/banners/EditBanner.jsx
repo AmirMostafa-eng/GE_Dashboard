@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import axios from "axios";
 import toast from "react-hot-toast";
-import api from "api/axios";
+import api from "@/api/axios";
 
 export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
   const [formData, setFormData] = useState({

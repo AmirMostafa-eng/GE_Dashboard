@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import api from "api/axios";
+import api from "@/api/axios";
 
 export default function CreateBanner({ isOpen, onClose, onSuccess }) {
   const navigate = useNavigate();
