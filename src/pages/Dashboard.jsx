@@ -126,7 +126,7 @@ export default function Dashboard() {
             variant="transparent"
           >
             <img
-              src="/public/A_friendly_cartoon-style_character_in_flat_vector_illustration__standing_on-removebg-preview.png"
+              src="/A_friendly_cartoon-style_character_in_flat_vector_illustration__standing_on-removebg-preview.png"
               alt="login"
               srcset=""
               className="hover:drop-shadow-2xl transition-all duration-200"
