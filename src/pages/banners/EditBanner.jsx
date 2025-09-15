@@ -7,8 +7,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+// import axios from "axios";
 import toast from "react-hot-toast";
+import api from "api/axios";
 
 export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ export default function EditBanner({ isOpen, onClose, banner, onSuccess }) {
       const tokenData =
         JSON.parse(sessionStorage.getItem("tokens")) ||
         JSON.parse(localStorage.getItem("tokens"));
-      await axios.put(`/api/banner/update/${banner.id}`, formDataToSend, {
+      await api.put(`/api/banner/update/${banner.id}`, formDataToSend, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${tokenData.accessToken}`,

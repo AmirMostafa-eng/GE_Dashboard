@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import api from "api/axios";
 
 export default function CreateBanner({ isOpen, onClose, onSuccess }) {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function CreateBanner({ isOpen, onClose, onSuccess }) {
       const tokenData =
         JSON.parse(sessionStorage.getItem("tokens")) ||
         JSON.parse(localStorage.getItem("tokens"));
-      await axios.post("/api/banner/create", formDataToSend, {
+      await api.post("/api/banner/create", formDataToSend, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${tokenData.accessToken}`,

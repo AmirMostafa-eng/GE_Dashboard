@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 // import mockUsers from "./UsersData";
 import UserTable from "./UsersTable";
-import axios from "axios";
 import UserDetails from "./UserDetails"; // Add this import
 import {
   Dialog,
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import api from "api/axios";
 
 export default function ManageUsers() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function ManageUsers() {
         navigate("/");
         return;
       }
-      const fetchedUsers = await axios.get("/api/user/get-users", {
+      const fetchedUsers = await api.get("/api/user/get-users", {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -127,7 +127,7 @@ export default function ManageUsers() {
     try {
       const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
 
-      await axios.delete(`/api/user/delete-user/${userId}`, {
+      await api.delete(`/api/user/delete-user/${userId}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },

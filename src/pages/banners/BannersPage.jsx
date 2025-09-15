@@ -12,9 +12,10 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import axios from "axios";
+// import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import api from "api/axios";
 
 export default function BannersPage() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function BannersPage() {
         navigate("/");
         return;
       }
-      const fetchedBanners = await axios.get("/api/banner/get-all", {
+      const fetchedBanners = await api.get("/api/banner/get-all", {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -97,7 +98,7 @@ export default function BannersPage() {
       JSON.parse(sessionStorage.getItem("tokens")) ||
       JSON.parse(localStorage.getItem("tokens"));
     try {
-      await axios.delete(`/api/banner/delete/${selectedBanner.id}`, {
+      await api.delete(`/api/banner/delete/${selectedBanner.id}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },

@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Lock, User, Clock, Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+import api from "api/axios";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Login() {
@@ -32,7 +33,7 @@ export default function Login() {
     try {
       console.log("Login attempt:", formData);
 
-      const returnedTokens = await axios.post("/api/Auth/login", formData);
+      const returnedTokens = await api.post("/api/Auth/login", formData);
 
       // Save session data
       sessionStorage.setItem("user", JSON.stringify(formData));

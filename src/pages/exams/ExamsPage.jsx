@@ -23,12 +23,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import ExamTable from "./ExamTable";
-import axios from "axios";
+// import axios from "axios";
 import ViewExamDialog from "./create/ViewExamDialog";
 import ExamFormDialog from "./create/ExamFormDialog";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import EditExamDialog from "./edit/EditExamDialog";
+import api from "api/axios";
 // import CreateExam from "./CreateExam";
 
 export default function ExamsPage() {
@@ -54,7 +55,7 @@ export default function ExamsPage() {
       return;
     }
     try {
-      const response = await axios.get("/api/exam", {
+      const response = await api.get("/api/exam", {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -127,7 +128,7 @@ export default function ExamsPage() {
   const handleConfirmDelete = async () => {
     const tokenData = JSON.parse(sessionStorage.getItem("tokens"));
     try {
-      await axios.delete(`/api/exam/${selectedExam.id}`, {
+      await api.delete(`/api/exam/${selectedExam.id}`, {
         headers: {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
@@ -181,7 +182,7 @@ export default function ExamsPage() {
     if (dialogMode === "edit") {
       try {
         console.log("Updating exam:", examData);
-        await axios.put(`/api/exam/${examData.id}`, examData, {
+        await api.put(`/api/exam/${examData.id}`, examData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${tokenData.accessToken}`,
@@ -206,7 +207,7 @@ export default function ExamsPage() {
     } else {
       try {
         console.log("Creating new exam:", examData);
-        await axios.post("/api/exam", examData, {
+        await api.post("/api/exam", examData, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${tokenData.accessToken}`,
