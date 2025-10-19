@@ -204,6 +204,7 @@ export default function QuestionForm({ question, onChange, onDelete }) {
                 />
                 <div className="flex items-center gap-2">
                   <input
+                    id={`answer-${answer.id || answerIndex}`}
                     type={
                       question.type === "multi_choice" ? "checkbox" : "radio"
                     }
@@ -230,9 +231,11 @@ export default function QuestionForm({ question, onChange, onDelete }) {
                     }}
                     className="w-4 h-4"
                   />
-                  <span className="text-sm text-muted-foreground">
-                    Correct Answer
-                  </span>
+                  <label htmlFor={`answer-${answer.id || answerIndex}`}>
+                    <span className="text-sm text-muted-foreground">
+                      Correct Answer
+                    </span>
+                  </label>
                 </div>
               </div>
               <Button
